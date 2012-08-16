@@ -511,7 +511,7 @@ return !element.dispatchEvent(evt);
         If you wish to assert the number of matching elements, use
         `Xpath Should Match X Times`.
         """
-        count = len(self._element_find("xpath=" + xpath, False, False))
+        count = len(self._element_find(self._get_xpath_with_prefix(xpath), False, False))
         return str(count)
 
     def xpath_should_match_x_times(self, xpath, expected_xpath_count, message='', loglevel='INFO'):
@@ -520,7 +520,7 @@ return !element.dispatchEvent(evt);
         See `Page Should Contain Element` for explanation about `message` and
         `loglevel` arguments.
         """
-        actual_xpath_count = len(self._element_find("xpath=" + xpath, False, False))
+        actual_xpath_count = len(self._element_find(self._get_xpath_with_prefix(xpath), False, False))
         if int(actual_xpath_count) != int(expected_xpath_count):
             if not message:
                 message = "Xpath %s should have matched %s times but matched %s times"\
@@ -657,3 +657,9 @@ return !element.dispatchEvent(evt);
         self._info("Current page does not contain %s '%s'."
                    % (element_name, locator))
 
+    def _get_xpath_with_prefix(self, xpath):
+        xpath_prefix = "xpath="
+        if not xpath.startswith(xpath_prefix):
+            xpath = xpath_prefix + xpath
+
+        return xpath
